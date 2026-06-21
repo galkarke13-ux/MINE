@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Offline Music Player</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .player {
+            background: #181818;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            text-align: center;
+            width: 320px;
+            border: 1px solid #282828;
+        }
+        #album-art {
+            width: 280px;
+            height: 280px;
+            border-radius: 12px;
+            object-fit: cover;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+        .track-info h2 { margin: 10px 0 5px; font-size: 1.4rem; font-weight: 600; }
+        .track-info p { margin: 0 0 25px; color: #b3b3b3; font-size: 0.9rem; }
+        .controls {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: transform 0.2s, color 0.2s;
+        }
+        button:hover { transform: scale(1.1); color: #1db954; }
+        #play-btn { font-size: 3rem; color: #1db954; }
+        #play-btn:hover { color: #1ed760; transform: scale(1.05); }
+        audio { width: 100%; margin-top: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="player">
+    <img id="album-art" src="1.jpg" alt="Album Art">
+    <div class="track-info">
+        <h2 id="title">Track 1</h2>
+        <p id="artist">Offline Playlist</p>
+    </div>
+    
+    <div class="controls">
+        <button onclick="prevTrack()">⏮</button>
+        <button id="play-btn" onclick="togglePlay()">▶</button>
+        <button onclick="nextTrack()">⏭</button>
+    </div>
+
+    <audio id="audio-player" onended="nextTrack()"></audio>
+</div>
+
+<script>
+    // Since you renamed everything 1 to 8, the code automatically tracks the numbers!
+    // You only need to change the Titles and Artists here if you want to.
+    const playlist = [
+        { title: "NAMO NAMO ", artist: "AMIT TRIVEDI", audio: "1.mp3", art: "1.jpg" },
+        { title: "TU AAKE DEKHLE", artist: "KING", audio: "2.mp3", art: "2.jpg" },
+        { title: "HANUMAN CHALISA", artist: "GOWRAHARI", audio: "3.mp3", art: "3.jpg" },
+        { title: "AARAMBH HAI PRACHAND", artist: "SHRYLOX", audio: "4.mp3", art: "4.jpg" },
+        { title: "CHAL DIYE TUM KAHAN", artist: "AUR", audio: "5.mp3", art: "5.jpg" },
+        { title: "SAATHI", artist: "Atif aslam", audio: "6.mp3", art: "6.jpg" },
+        { title: "TERA FITOOR", artist: "Arjit singh", audio: "7.mp3", art: "7.jpg" },
+        { title: "TERE SANG YARRA", artist: "Atif aslam", audio: "8.mp3", art: "8.jpg" }
+    ];
+
+    let currentTrackIndex = 0;
+    let isPlaying = false;
+
+    const audio = document.getElementById('audio-player');
+    const art = document.getElementById('album-art');
+    const title = document.getElementById('title');
+    const artist = document.getElementById('artist');
+    const playBtn = document.getElementById('play-btn');
+
+    function loadTrack(index) {
+        const track = playlist[index];
+        title.innerText = track.title;
+        artist.innerText = track.artist;
+        art.src = track.art;
+        audio.src = track.audio;
+    }
+
+    function togglePlay() {
+        if (isPlaying) {
+            audio.pause();
+            playBtn.innerText = "▶";
+        } else {
+            audio.play();
+            playBtn.innerText = "⏸";
+        }
+        isPlaying = !isPlaying;
+    }
+
+    function nextTrack() {
+        currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+        loadTrack(currentTrackIndex);
+        if (isPlaying) audio.play();
+    }
+
+    function prevTrack() {
+        currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
+        loadTrack(currentTrackIndex);
+        if (isPlaying) audio.play();
+    }
+
+    // Load the first track immediately
+    loadTrack(currentTrackIndex);
+</script>
+
+</body>
+</html>
