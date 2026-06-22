@@ -13,84 +13,87 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            /* स्मूथ कलर चेंज के लिए ट्रांज़िशन */
             transition: background 0.8s ease; 
             background: #121212;
+            overflow: hidden;
         }
         .player {
             background: transparent;
             padding: 20px;
-            width: 340px;
+            width: 360px;
             box-sizing: border-box;
         }
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.75rem;
-            letter-spacing: 1px;
+            font-size: 0.7rem;
+            letter-spacing: 1.5px;
             text-transform: uppercase;
             color: #e0e0e0;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
         .header span {
-            font-weight: bold;
+            font-weight: 700;
             text-align: center;
             flex-grow: 1;
         }
         .header-btn {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             cursor: pointer;
+            color: rgba(255, 255, 255, 0.8);
         }
         #album-art {
             width: 100%;
             aspect-ratio: 1/1;
             border-radius: 8px;
             object-fit: cover;
-            margin-bottom: 40px;
-            box-shadow: 0 12px 30px rgba(0,0,0,0.7);
+            margin-bottom: 35px;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.6);
         }
         .track-meta {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 25px;
+            padding: 0 5px;
         }
         .track-info {
             max-width: 80%;
         }
         .track-info h2 { 
             margin: 0 0 5px; 
-            font-size: 1.35rem; 
+            font-size: 1.4rem; 
             font-weight: 700;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            letter-spacing: -0.5px;
         }
         .track-info p { 
             margin: 0; 
-            color: rgba(255,255,255,0.7); 
+            color: rgba(255,255,255,0.6); 
             font-size: 0.95rem; 
         }
         .plus-icon {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             color: rgba(255,255,255,0.7);
             cursor: pointer;
-            border: 2px solid rgba(255,255,255,0.7);
+            border: 2px solid rgba(255,255,255,0.6);
             border-radius: 50%;
-            width: 24px;
-            height: 24px;
+            width: 22px;
+            height: 22px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: normal;
-            line-height: 1;
         }
         
         /* Spotify Timeline/Seekbar */
         .progress-container {
             width: 100%;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
+            padding: 0 5px;
+            box-sizing: border-box;
         }
         .progress-bar {
             width: 100%;
@@ -105,8 +108,8 @@
         .progress-bar::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             background: white;
             cursor: pointer;
@@ -115,16 +118,17 @@
             display: flex;
             justify-content: space-between;
             font-size: 0.75rem;
-            color: rgba(255,255,255,0.6);
+            color: rgba(255,255,255,0.5);
             margin-top: 8px;
         }
 
-        /* Controls Block */
+        /* Controls Block (Fixed Alignment) */
         .controls {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 40px;
+            margin-bottom: 35px;
+            padding: 0 5px;
         }
         .btn {
             background: none;
@@ -134,27 +138,33 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: transform 0.2s;
+            transition: transform 0.2s, color 0.2s;
+            padding: 0;
         }
         .btn:active {
-            transform: scale(0.95);
+            transform: scale(0.9);
         }
         .btn-secondary {
-            font-size: 1.3rem;
-            color: rgba(255,255,255,0.6);
+            font-size: 1.4rem;
+            color: rgba(255,255,255,0.5);
+            width: 40px;
         }
         .btn-main {
-            font-size: 2rem;
+            font-size: 1.8rem;
             color: white;
+            width: 45px;
         }
         #play-btn { 
-            font-size: 1.5rem; 
+            font-size: 1.4rem; 
             color: black; 
             background: white;
-            width: 60px;
-            height: 60px;
+            width: 56px;
+            height: 56px;
             border-radius: 50%;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        #play-btn:hover {
+            transform: scale(1.05);
         }
 
         /* Footer Icons */
@@ -162,12 +172,18 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            color: rgba(255,255,255,0.6);
-            padding: 0 5px;
-            font-size: 1.2rem;
+            color: rgba(255,255,255,0.5);
+            padding: 0 10px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
         .footer-icon {
             cursor: pointer;
+            transition: color 0.2s;
+        }
+        .footer-icon:hover {
+            color: white;
         }
     </style>
 </head>
@@ -175,7 +191,7 @@
 
 <div class="player">
     <div class="header">
-        <div class="header-btn"> Dismiss </div>
+        <div class="header-btn">⌂</div>
         <span>PLAYING FROM ALBUM</span>
         <div class="header-btn">⋮</div>
     </div>
@@ -199,26 +215,26 @@
     </div>
 
     <div class="controls">
-        <button class="btn btn-secondary" id="shuffle-btn" onclick="toggleShuffle()">Shuffle</button>
-        <button class="btn btn-main" onclick="prevTrack()">Prev</button>
-        <button class="btn" id="play-btn" onclick="togglePlay()">Play</button>
-        <button class="btn btn-main" onclick="nextTrack()">Next</button>
-        <button class="btn btn-secondary">Timer</button>
+        <button class="btn btn-secondary" id="shuffle-btn" onclick="toggleShuffle()">⇄</button>
+        <button class="btn btn-main" onclick="prevTrack()">⏮</button>
+        <button class="btn" id="play-btn" onclick="togglePlay()">▶</button>
+        <button class="btn btn-main" onclick="nextTrack()">⏭</button>
+        <button class="btn btn-secondary">🕒</button>
     </div>
 
     <div class="footer-controls">
-        <div class="footer-icon">Device</div>
-        <div class="footer-icon">Share</div>
-        <div class="footer-icon">Queue</div>
+        <div class="footer-icon">DEVICE</div>
+        <div class="footer-icon">SHARE</div>
+        <div class="footer-icon">QUEUE</div>
     </div>
 
     <audio id="audio-player"></audio>
 </div>
 
 <script>
-    // यहाँ आप हर गाने के लिए अलग 'color' कोड सेट कर सकते हैं (जैसे रेड, ब्लू, ग्रीन जो गाने की फोटो से मैच करे)
+    // यहाँ आप हर गाने के लिए अलग 'color' कोड सेट कर सकते हैं जो फोटो से मैच करे
     const playlist = [
-        { title: "Dil Meri Na Sune", artist: "Atif Aslam", audio: "1.mp3", art: "1.jpg", color: "#5c2c16" },
+        { title: "Dil Meri Na Sune", artist: "Atif Aslam", audio: "1.mp3", art: "1.jpg", color: "#613a27" },
         { title: "Song 2 Title", artist: "Artist Name", audio: "2.mp3", art: "2.jpg", color: "#1c3c5c" },
         { title: "Song 3 Title", artist: "Artist Name", audio: "3.mp3", art: "3.jpg", color: "#2d5c1c" },
         { title: "Song 4 Title", artist: "Artist Name", audio: "4.mp3", art: "4.jpg", color: "#501c5c" },
@@ -257,10 +273,10 @@
     function togglePlay() {
         if (isPlaying) {
             audio.pause();
-            playBtn.innerText = "Play";
+            playBtn.innerText = "▶";
         } else {
             audio.play().catch(err => console.log("Playback interaction restriction"));
-            playBtn.innerText = "Pause";
+            playBtn.innerText = "⏸";
         }
         isPlaying = !isPlaying;
     }
@@ -275,7 +291,6 @@
         if (isPlaying) audio.play();
     }
 
-    // बाकी कोड को बिना छेड़े लोड करना जारी रखें
     function prevTrack() {
         currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
         loadTrack(currentTrackIndex);
@@ -288,7 +303,7 @@
         if (isShuffle) {
             shuffleBtn.style.color = "#1db954";
         } else {
-            shuffleBtn.style.color = "rgba(255,255,255,0.6)";
+            shuffleBtn.style.color = "rgba(255,255,255,0.5)";
         }
     }
 
