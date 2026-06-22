@@ -3,97 +3,243 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Offline Music Player</title>
+    <title>Spotify Style Dynamic Player</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #121212;
             color: white;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
+            /* स्मूथ कलर चेंज के लिए ट्रांज़िशन */
+            transition: background 0.8s ease; 
+            background: #121212;
         }
         .player {
-            background: #181818;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            background: transparent;
+            padding: 20px;
+            width: 340px;
+            box-sizing: border-box;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #e0e0e0;
+            margin-bottom: 30px;
+        }
+        .header span {
+            font-weight: bold;
             text-align: center;
-            width: 320px;
-            border: 1px solid #282828;
+            flex-grow: 1;
+        }
+        .header-btn {
+            font-size: 1.2rem;
+            cursor: pointer;
         }
         #album-art {
-            width: 280px;
-            height: 280px;
-            border-radius: 12px;
+            width: 100%;
+            aspect-ratio: 1/1;
+            border-radius: 8px;
             object-fit: cover;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            margin-bottom: 40px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.7);
         }
-        .track-info h2 { margin: 10px 0 5px; font-size: 1.4rem; font-weight: 600; }
-        .track-info p { margin: 0 0 25px; color: #b3b3b3; font-size: 0.9rem; }
+        .track-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .track-info {
+            max-width: 80%;
+        }
+        .track-info h2 { 
+            margin: 0 0 5px; 
+            font-size: 1.35rem; 
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .track-info p { 
+            margin: 0; 
+            color: rgba(255,255,255,0.7); 
+            font-size: 0.95rem; 
+        }
+        .plus-icon {
+            font-size: 1.5rem;
+            color: rgba(255,255,255,0.7);
+            cursor: pointer;
+            border: 2px solid rgba(255,255,255,0.7);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: normal;
+            line-height: 1;
+        }
+        
+        /* Spotify Timeline/Seekbar */
+        .progress-container {
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        .progress-bar {
+            width: 100%;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 4px;
+            border-radius: 2px;
+            background: rgba(255,255,255,0.2);
+            outline: none;
+            cursor: pointer;
+        }
+        .progress-bar::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+        }
+        .time-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.6);
+            margin-top: 8px;
+        }
+
+        /* Controls Block */
         .controls {
             display: flex;
-            justify-content: space-around;
+            justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 40px;
         }
-        button {
+        .btn {
             background: none;
             border: none;
             color: white;
-            font-size: 1.8rem;
             cursor: pointer;
-            transition: transform 0.2s, color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
         }
-        button:hover { transform: scale(1.1); color: #1db954; }
-        #play-btn { font-size: 3rem; color: #1db954; }
-        #play-btn:hover { color: #1ed760; transform: scale(1.05); }
-        audio { width: 100%; margin-top: 15px; }
+        .btn:active {
+            transform: scale(0.95);
+        }
+        .btn-secondary {
+            font-size: 1.3rem;
+            color: rgba(255,255,255,0.6);
+        }
+        .btn-main {
+            font-size: 2rem;
+            color: white;
+        }
+        #play-btn { 
+            font-size: 1.5rem; 
+            color: black; 
+            background: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        /* Footer Icons */
+        .footer-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: rgba(255,255,255,0.6);
+            padding: 0 5px;
+            font-size: 1.2rem;
+        }
+        .footer-icon {
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
 <div class="player">
-    <img id="album-art" src="1.jpg" alt="Album Art">
-    <div class="track-info">
-        <h2 id="title">Track 1</h2>
-        <p id="artist">Offline Playlist</p>
-    </div>
-    
-    <div class="controls">
-        <button onclick="prevTrack()">⏮</button>
-        <button id="play-btn" onclick="togglePlay()">▶</button>
-        <button onclick="nextTrack()">⏭</button>
+    <div class="header">
+        <div class="header-btn"> Dismiss </div>
+        <span>PLAYING FROM ALBUM</span>
+        <div class="header-btn">⋮</div>
     </div>
 
-    <audio id="audio-player" onended="nextTrack()"></audio>
+    <img id="album-art" src="1.jpg" alt="Album Art">
+    
+    <div class="track-meta">
+        <div class="track-info">
+            <h2 id="title">Song 1 Title</h2>
+            <p id="artist">Artist Name</p>
+        </div>
+        <div class="plus-icon">+</div>
+    </div>
+    
+    <div class="progress-container">
+        <input type="range" id="progress" class="progress-bar" min="0" max="100" value="0" oninput="seekTrack()">
+        <div class="time-info">
+            <span id="current-time">0:00</span>
+            <span id="duration">0:00</span>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn btn-secondary" id="shuffle-btn" onclick="toggleShuffle()">Shuffle</button>
+        <button class="btn btn-main" onclick="prevTrack()">Prev</button>
+        <button class="btn" id="play-btn" onclick="togglePlay()">Play</button>
+        <button class="btn btn-main" onclick="nextTrack()">Next</button>
+        <button class="btn btn-secondary">Timer</button>
+    </div>
+
+    <div class="footer-controls">
+        <div class="footer-icon">Device</div>
+        <div class="footer-icon">Share</div>
+        <div class="footer-icon">Queue</div>
+    </div>
+
+    <audio id="audio-player"></audio>
 </div>
 
 <script>
-    // Since you renamed everything 1 to 8, the code automatically tracks the numbers!
-    // You only need to change the Titles and Artists here if you want to.
+    // यहाँ आप हर गाने के लिए अलग 'color' कोड सेट कर सकते हैं (जैसे रेड, ब्लू, ग्रीन जो गाने की फोटो से मैच करे)
     const playlist = [
-        { title: "NAMO NAMO ", artist: "AMIT TRIVEDI", audio: "1.mp3", art: "1.jpg" },
-        { title: "TU AAKE DEKHLE", artist: "KING", audio: "2.mp3", art: "2.jpg" },
-        { title: "HANUMAN CHALISA", artist: "GOWRAHARI", audio: "3.mp3", art: "3.jpg" },
-        { title: "AARAMBH HAI PRACHAND", artist: "SHRYLOX", audio: "4.mp3", art: "4.jpg" },
-        { title: "CHAL DIYE TUM KAHAN", artist: "AUR", audio: "5.mp3", art: "5.jpg" },
-        { title: "SAATHI", artist: "Atif aslam", audio: "6.mp3", art: "6.jpg" },
-        { title: "TERA FITOOR", artist: "Arjit singh", audio: "7.mp3", art: "7.jpg" },
-        { title: "TERE SANG YARRA", artist: "Atif aslam", audio: "8.mp3", art: "8.jpg" }
+        { title: "Dil Meri Na Sune", artist: "Atif Aslam", audio: "1.mp3", art: "1.jpg", color: "#5c2c16" },
+        { title: "Song 2 Title", artist: "Artist Name", audio: "2.mp3", art: "2.jpg", color: "#1c3c5c" },
+        { title: "Song 3 Title", artist: "Artist Name", audio: "3.mp3", art: "3.jpg", color: "#2d5c1c" },
+        { title: "Song 4 Title", artist: "Artist Name", audio: "4.mp3", art: "4.jpg", color: "#501c5c" },
+        { title: "Song 5 Title", artist: "Artist Name", audio: "5.mp3", art: "5.jpg", color: "#5c1c28" },
+        { title: "Song 6 Title", artist: "Artist Name", audio: "6.mp3", art: "6.jpg", color: "#1c5c56" },
+        { title: "Song 7 Title", artist: "Artist Name", audio: "7.mp3", art: "7.jpg", color: "#474747" },
+        { title: "Song 8 Title", artist: "Artist Name", audio: "8.mp3", art: "8.jpg", color: "#36275c" }
     ];
 
     let currentTrackIndex = 0;
     let isPlaying = false;
+    let isShuffle = false;
 
     const audio = document.getElementById('audio-player');
     const art = document.getElementById('album-art');
     const title = document.getElementById('title');
     const artist = document.getElementById('artist');
     const playBtn = document.getElementById('play-btn');
+    const progress = document.getElementById('progress');
+    const currentTimeEl = document.getElementById('current-time');
+    const durationEl = document.getElementById('duration');
 
     function loadTrack(index) {
         const track = playlist[index];
@@ -101,32 +247,86 @@
         artist.innerText = track.artist;
         art.src = track.art;
         audio.src = track.audio;
+        
+        // डायनामिक बैकग्राउंड चेंज लॉजिक
+        document.body.style.background = `linear-gradient(to bottom, ${track.color} 0%, #121212 100%)`;
+        
+        resetProgress();
     }
 
     function togglePlay() {
         if (isPlaying) {
             audio.pause();
-            playBtn.innerText = "▶";
+            playBtn.innerText = "Play";
         } else {
-            audio.play();
-            playBtn.innerText = "⏸";
+            audio.play().catch(err => console.log("Playback interaction restriction"));
+            playBtn.innerText = "Pause";
         }
         isPlaying = !isPlaying;
     }
 
     function nextTrack() {
-        currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+        if (isShuffle) {
+            currentTrackIndex = Math.floor(Math.random() * playlist.length);
+        } else {
+            currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+        }
         loadTrack(currentTrackIndex);
         if (isPlaying) audio.play();
     }
 
+    // बाकी कोड को बिना छेड़े लोड करना जारी रखें
     function prevTrack() {
         currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
         loadTrack(currentTrackIndex);
         if (isPlaying) audio.play();
     }
 
-    // Load the first track immediately
+    function toggleShuffle() {
+        isShuffle = !isShuffle;
+        const shuffleBtn = document.getElementById('shuffle-btn');
+        if (isShuffle) {
+            shuffleBtn.style.color = "#1db954";
+        } else {
+            shuffleBtn.style.color = "rgba(255,255,255,0.6)";
+        }
+    }
+
+    function resetProgress() {
+        progress.value = 0;
+        currentTimeEl.innerText = "0:00";
+        durationEl.innerText = "0:00";
+    }
+
+    function formatTime(time) {
+        if (isNaN(time)) return "0:00";
+        const mins = Math.floor(time / 60);
+        const secs = Math.floor(time % 60);
+        return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+
+    audio.addEventListener('timeupdate', () => {
+        if (audio.duration) {
+            const progressPercent = (audio.currentTime / audio.duration) * 100;
+            progress.value = progressPercent;
+            currentTimeEl.innerText = formatTime(audio.currentTime);
+            durationEl.innerText = formatTime(audio.duration);
+        }
+    });
+
+    audio.addEventListener('loadedmetadata', () => {
+        durationEl.innerText = formatTime(audio.duration);
+    });
+
+    audio.addEventListener('ended', nextTrack);
+
+    function seekTrack() {
+        if (audio.duration) {
+            const seekTo = (progress.value / 100) * audio.duration;
+            audio.currentTime = seekTo;
+        }
+    }
+
     loadTrack(currentTrackIndex);
 </script>
 
