@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify Style Dynamic Player</title>
+    <title>My Dynamic Music Player</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -15,85 +15,43 @@
             margin: 0;
             transition: background 0.8s ease; 
             background: #121212;
-            overflow: hidden;
         }
         .player {
-            background: transparent;
-            padding: 20px;
-            width: 360px;
-            box-sizing: border-box;
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.7rem;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            color: #e0e0e0;
-            margin-bottom: 25px;
-        }
-        .header span {
-            font-weight: 700;
+            background: rgba(24, 24, 24, 0.6);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
             text-align: center;
-            flex-grow: 1;
-        }
-        .header-btn {
-            font-size: 1.1rem;
-            cursor: pointer;
-            color: rgba(255, 255, 255, 0.8);
+            width: 320px;
+            border: 1px solid rgba(40, 40, 40, 0.5);
+            backdrop-filter: blur(10px);
         }
         #album-art {
-            width: 100%;
-            aspect-ratio: 1/1;
-            border-radius: 8px;
+            width: 280px;
+            height: 280px;
+            border-radius: 12px;
             object-fit: cover;
-            margin-bottom: 35px;
-            box-shadow: 0 12px 35px rgba(0,0,0,0.6);
-        }
-        .track-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             margin-bottom: 25px;
-            padding: 0 5px;
-        }
-        .track-info {
-            max-width: 80%;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
         }
         .track-info h2 { 
-            margin: 0 0 5px; 
+            margin: 10px 0 5px; 
             font-size: 1.4rem; 
-            font-weight: 700;
+            font-weight: 600; 
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            letter-spacing: -0.5px;
         }
         .track-info p { 
-            margin: 0; 
-            color: rgba(255,255,255,0.6); 
-            font-size: 0.95rem; 
-        }
-        .plus-icon {
-            font-size: 1.3rem;
-            color: rgba(255,255,255,0.7);
-            cursor: pointer;
-            border: 2px solid rgba(255,255,255,0.6);
-            border-radius: 50%;
-            width: 22px;
-            height: 22px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            margin: 0 0 25px; 
+            color: #b3b3b3; 
+            font-size: 0.9rem; 
         }
         
-        /* Spotify Timeline/Seekbar */
+        /* Duration Bar / Seekbar Styling */
         .progress-container {
             width: 100%;
             margin-bottom: 25px;
-            padding: 0 5px;
-            box-sizing: border-box;
         }
         .progress-bar {
             width: 100%;
@@ -101,7 +59,7 @@
             appearance: none;
             height: 4px;
             border-radius: 2px;
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
             outline: none;
             cursor: pointer;
         }
@@ -118,19 +76,19 @@
             display: flex;
             justify-content: space-between;
             font-size: 0.75rem;
-            color: rgba(255,255,255,0.5);
-            margin-top: 8px;
+            color: #b3b3b3;
+            margin-top: 6px;
         }
 
-        /* Controls Block (Fixed Alignment) */
+        /* Spotify Style Controls Layout (Matching Screenshot) */
         .controls {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 35px;
-            padding: 0 5px;
+            margin-bottom: 10px;
+            padding: 0 15px;
         }
-        .btn {
+        .control-btn {
             background: none;
             border: none;
             color: white;
@@ -138,72 +96,36 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: transform 0.2s, color 0.2s;
             padding: 0;
+            transition: transform 0.2s;
         }
-        .btn:active {
+        .control-btn:active {
             transform: scale(0.9);
         }
-        .btn-secondary {
-            font-size: 1.4rem;
-            color: rgba(255,255,255,0.5);
-            width: 40px;
+        .nav-icon {
+            font-size: 2.2rem; /* सिम्बल का साइज */
         }
-        .btn-main {
-            font-size: 1.8rem;
-            color: white;
-            width: 45px;
-        }
+        
+        /* White Circular Play Button */
         #play-btn { 
-            font-size: 1.4rem; 
-            color: black; 
             background: white;
-            width: 56px;
-            height: 56px;
+            color: black;
+            width: 65px;
+            height: 65px;
             border-radius: 50%;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
-        #play-btn:hover {
-            transform: scale(1.05);
-        }
-
-        /* Footer Icons */
-        .footer-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: rgba(255,255,255,0.5);
-            padding: 0 10px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-        .footer-icon {
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-        .footer-icon:hover {
-            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
     </style>
 </head>
 <body>
 
 <div class="player">
-    <div class="header">
-        <div class="header-btn">⌂</div>
-        <span>PLAYING FROM ALBUM</span>
-        <div class="header-btn">⋮</div>
-    </div>
-
     <img id="album-art" src="1.jpg" alt="Album Art">
     
-    <div class="track-meta">
-        <div class="track-info">
-            <h2 id="title">Song 1 Title</h2>
-            <p id="artist">Artist Name</p>
-        </div>
-        <div class="plus-icon">+</div>
+    <div class="track-info">
+        <h2 id="title">Song 1 Title</h2>
+        <p id="artist">Offline Playlist</p>
     </div>
     
     <div class="progress-container">
@@ -215,26 +137,17 @@
     </div>
 
     <div class="controls">
-        <button class="btn btn-secondary" id="shuffle-btn" onclick="toggleShuffle()">⇄</button>
-        <button class="btn btn-main" onclick="prevTrack()">⏮</button>
-        <button class="btn" id="play-btn" onclick="togglePlay()">▶</button>
-        <button class="btn btn-main" onclick="nextTrack()">⏭</button>
-        <button class="btn btn-secondary">🕒</button>
-    </div>
-
-    <div class="footer-controls">
-        <div class="footer-icon">DEVICE</div>
-        <div class="footer-icon">SHARE</div>
-        <div class="footer-icon">QUEUE</div>
+        <button class="control-btn nav-icon" onclick="prevTrack()">⏮</button>
+        <button class="control-btn" id="play-btn" onclick="togglePlay()">▶</button>
+        <button class="control-btn nav-icon" onclick="nextTrack()">⏭</button>
     </div>
 
     <audio id="audio-player"></audio>
 </div>
 
 <script>
-    // यहाँ आप हर गाने के लिए अलग 'color' कोड सेट कर सकते हैं जो फोटो से मैच करे
     const playlist = [
-        { title: "Dil Meri Na Sune", artist: "Atif Aslam", audio: "1.mp3", art: "1.jpg", color: "#613a27" },
+        { title: "Dil Meri Na Sune", artist: "Atif Aslam", audio: "1.mp3", art: "1.jpg", color: "#4c2211" },
         { title: "Song 2 Title", artist: "Artist Name", audio: "2.mp3", art: "2.jpg", color: "#1c3c5c" },
         { title: "Song 3 Title", artist: "Artist Name", audio: "3.mp3", art: "3.jpg", color: "#2d5c1c" },
         { title: "Song 4 Title", artist: "Artist Name", audio: "4.mp3", art: "4.jpg", color: "#501c5c" },
@@ -246,7 +159,6 @@
 
     let currentTrackIndex = 0;
     let isPlaying = false;
-    let isShuffle = false;
 
     const audio = document.getElementById('audio-player');
     const art = document.getElementById('album-art');
@@ -264,7 +176,7 @@
         art.src = track.art;
         audio.src = track.audio;
         
-        // डायनामिक बैकग्राउंड चेंज लॉजिक
+        // डायनामिक बैकग्राउंड
         document.body.style.background = `linear-gradient(to bottom, ${track.color} 0%, #121212 100%)`;
         
         resetProgress();
@@ -274,37 +186,26 @@
         if (isPlaying) {
             audio.pause();
             playBtn.innerText = "▶";
+            playBtn.style.paddingLeft = "0px"; // आइकॉन अलाइनमेंट सेट करने के लिए
         } else {
             audio.play().catch(err => console.log("Playback interaction restriction"));
             playBtn.innerText = "⏸";
+            playBtn.style.paddingLeft = "0px";
         }
         isPlaying = !isPlaying;
     }
 
     function nextTrack() {
-        if (isShuffle) {
-            currentTrackIndex = Math.floor(Math.random() * playlist.length);
-        } else {
-            currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
-        }
+        currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
         loadTrack(currentTrackIndex);
         if (isPlaying) audio.play();
     }
 
+    /* बाकी जरूरी लॉजिक */
     function prevTrack() {
         currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
         loadTrack(currentTrackIndex);
         if (isPlaying) audio.play();
-    }
-
-    function toggleShuffle() {
-        isShuffle = !isShuffle;
-        const shuffleBtn = document.getElementById('shuffle-btn');
-        if (isShuffle) {
-            shuffleBtn.style.color = "#1db954";
-        } else {
-            shuffleBtn.style.color = "rgba(255,255,255,0.5)";
-        }
     }
 
     function resetProgress() {
