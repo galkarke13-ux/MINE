@@ -80,7 +80,7 @@
             margin-top: 6px;
         }
 
-        /* Spotify Style Controls Layout (Matching Screenshot) */
+        /* Spotify Style Controls Layout */
         .controls {
             display: flex;
             justify-content: space-between;
@@ -103,7 +103,7 @@
             transform: scale(0.9);
         }
         .nav-icon {
-            font-size: 2.2rem; /* सिम्बल का साइज */
+            font-size: 2.2rem;
         }
         
         /* White Circular Play Button */
@@ -124,8 +124,8 @@
     <img id="album-art" src="1.jpg" alt="Album Art">
     
     <div class="track-info">
-        <h2 id="title">Song 1 Title</h2>
-        <p id="artist">Offline Playlist</p>
+        <h2 id="title">Loading...</h2>
+        <p id="artist">Loading...</p>
     </div>
     
     <div class="progress-container">
@@ -146,15 +146,16 @@
 </div>
 
 <script>
+    // आपकी बताई हुई गानों की पूरी लिस्ट यहाँ सेट कर दी गई है
     const playlist = [
-        { title: "Dil Meri Na Sune", artist: "Atif Aslam", audio: "1.mp3", art: "1.jpg", color: "#4c2211" },
-        { title: "Song 2 Title", artist: "Artist Name", audio: "2.mp3", art: "2.jpg", color: "#1c3c5c" },
-        { title: "Song 3 Title", artist: "Artist Name", audio: "3.mp3", art: "3.jpg", color: "#2d5c1c" },
-        { title: "Song 4 Title", artist: "Artist Name", audio: "4.mp3", art: "4.jpg", color: "#501c5c" },
-        { title: "Song 5 Title", artist: "Artist Name", audio: "5.mp3", art: "5.jpg", color: "#5c1c28" },
-        { title: "Song 6 Title", artist: "Artist Name", audio: "6.mp3", art: "6.jpg", color: "#1c5c56" },
-        { title: "Song 7 Title", artist: "Artist Name", audio: "7.mp3", art: "7.jpg", color: "#474747" },
-        { title: "Song 8 Title", artist: "Artist Name", audio: "8.mp3", art: "8.jpg", color: "#36275c" }
+        { title: "Namo Namo", artist: "Amit Trivedi", audio: "1.mp3", art: "1.jpg", color: "#613a27" },
+        { title: "Tu Aake Dekhle", artist: "King", audio: "2.mp3", art: "2.jpg", color: "#1c3c5c" },
+        { title: "Hanuman Chalisa", artist: "GowraHari", audio: "3.mp3", art: "3.jpg", color: "#662d14" },
+        { title: "Aaramabh Hai Prachand", artist: "Shrylox", audio: "4.mp3", art: "4.jpg", color: "#4a1212" },
+        { title: "Chal Diye Tum Kahan", artist: "AURO", audio: "5.mp3", art: "5.jpg", color: "#1a403a" },
+        { title: "Saathi", artist: "Atif Aslam", audio: "6.mp3", art: "6.jpg", color: "#2b2240" },
+        { title: "Tera Fitoor", artist: "Arijit Singh", audio: "7.mp3", art: "7.jpg", color: "#471833" },
+        { title: "Tere Sang Yaara", artist: "Atif Aslam", audio: "8.mp3", art: "8.jpg", color: "#19354a" }
     ];
 
     let currentTrackIndex = 0;
@@ -176,7 +177,7 @@
         art.src = track.art;
         audio.src = track.audio;
         
-        // डायनामिक बैकग्राउंड
+        // डायनामिक बैकग्राउंड चेंज
         document.body.style.background = `linear-gradient(to bottom, ${track.color} 0%, #121212 100%)`;
         
         resetProgress();
@@ -186,11 +187,9 @@
         if (isPlaying) {
             audio.pause();
             playBtn.innerText = "▶";
-            playBtn.style.paddingLeft = "0px"; // आइकॉन अलाइनमेंट सेट करने के लिए
         } else {
             audio.play().catch(err => console.log("Playback interaction restriction"));
             playBtn.innerText = "⏸";
-            playBtn.style.paddingLeft = "0px";
         }
         isPlaying = !isPlaying;
     }
@@ -201,7 +200,6 @@
         if (isPlaying) audio.play();
     }
 
-    /* बाकी जरूरी लॉजिक */
     function prevTrack() {
         currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
         loadTrack(currentTrackIndex);
