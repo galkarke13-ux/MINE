@@ -116,91 +116,11 @@
             font-size: 1.5rem;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
-        .player{
-    position: relative;
-}
-
-#back-btn{
-    position:absolute;
-    top:15px;
-    left:15px;
-    background:none;
-    border:none;
-    color:white;
-    font-size:32px;
-    cursor:pointer;
-    z-index:100;
-}
-
-    #search-screen{
-    width:100%;
-    max-width:420px;
-    margin:auto;
-    padding:20px;
-}
-
-.search-header{
-    margin-bottom:20px;
-}
-
-#search-input{
-    width:100%;
-    padding:12px;
-    border:none;
-    border-radius:12px;
-    font-size:16px;
-    outline:none;
-}
-        .song-item{
-    display:flex;
-    align-items:center;
-    gap:15px;
-    padding:12px;
-    border-radius:12px;
-    cursor:pointer;
-    margin-bottom:10px;
-    transition:.2s;
-}
-
-.song-item:hover{
-    background:rgba(255,255,255,.08);
-}
-
-.song-art{
-    width:60px;
-    height:60px;
-    border-radius:10px;
-    object-fit:cover;
-}
-
-.song-info h3{
-    margin:0;
-    font-size:16px;
-}
-
-.song-info p{
-    margin:4px 0 0;
-    color:#b3b3b3;
-    font-size:14px;
-}
-      
     </style>
 </head>
 <body>
-    <div id="search-screen">
 
-    <div class="search-header">
-        <input type="text" id="search-input" placeholder="🔍 Search songs...">
-    </div>
-
-    <div id="song-list"></div>
-
-</div>
-
-<div class="player" id="player-screen" 
-    style="display:none;">
-    <button id="back-btn" 
-onclick="goBack()">←</button>
+<div class="player">
     <img id="album-art" src="1.jpg" alt="Album Art">
     
     <div class="track-info">
@@ -276,7 +196,7 @@ onclick="goBack()">←</button>
 
     function nextTrack() {
         currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
-        createSongList();
+        loadTrack(currentTrackIndex);
         if (isPlaying) audio.play();
     }
 
@@ -322,46 +242,6 @@ onclick="goBack()">←</button>
     }
 
     loadTrack(currentTrackIndex);
-    function goBack() {
-    alert("Search page will open here.");
-}
-    function createSongList() {
-
-    const songList = document.getElementById("song-list");
-
-    playlist.forEach((track, index) => {
-
-        songList.innerHTML += `
-            <div class="song-item" onclick="openPlayer(${index})">
-
-                <img src="${track.art}" class="song-art">
-
-                <div class="song-info">
-                    <h3>${track.title}</h3>
-                    <p>${track.artist}</p>
-                </div>
-
-            </div>
-        `;
-
-    });
-
-}
-
-function openPlayer(index){
-
-    currentTrackIndex = index;
-
-    loadTrack(index);
-
-    document.getElementById("search-screen").style.display = "none";
-
-    document.getElementById("player-screen").style.display = "block";
-
-    audio.play();
-
-}
-    createSongList();
 </script>
 
 </body>
