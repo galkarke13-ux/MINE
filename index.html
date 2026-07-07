@@ -116,11 +116,54 @@
             font-size: 1.5rem;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
+        #search-btn{
+    position:absolute;
+    top:15px;
+    right:15px;
+    background:none;
+    border:none;
+    color:white;
+    font-size:28px;
+    cursor:pointer;
+    z-index:100;
+}
+        #search-popup{
+    display:none;
+    position:absolute;
+    top:70px;
+    left:50%;
+    transform:translateX(-50%);
+    width:90%;
+    background:#222;
+    border-radius:15px;
+    padding:15px;
+    z-index:999;
+}
+
+#song-search{
+    width:100%;
+    padding:10px;
+    border:none;
+    border-radius:8px;
+    margin-bottom:10px;
+    outline:none;
+}
+
+.search-result{
+    padding:10px;
+    cursor:pointer;
+    border-bottom:1px solid #444;
+}
+
+.search-result:hover{
+    background:#333;
+}
     </style>
 </head>
 <body>
 
 <div class="player">
+    <button id="search-btn" onclick="openSearch()">🔍</button>
     <img id="album-art" src="1.jpg" alt="Album Art">
     
     <div class="track-info">
@@ -141,7 +184,16 @@
         <button class="control-btn" id="play-btn" onclick="togglePlay()">▶</button>
         <button class="control-btn nav-icon" onclick="nextTrack()">⏭</button>
     </div>
+    
+<div id="search-popup">
 
+    <input type="text" id="song-search" placeholder="Search song..." onkeyup="filterSongs()">
+
+    <div id="search-results"></div>
+
+    <button onclick="closeSearch()">Close</button>
+
+</div>
     <audio id="audio-player"></audio>
 </div>
 
