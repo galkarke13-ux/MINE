@@ -3,66 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>My Dynamic Music Player</title>
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: white;
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: 100vh;
+            align-items: flex-start;
+            min-height: 100vh;
             margin: 0;
-            transition: background 0.8s ease; 
+            padding: 25px 10px;
+            transition: background 0.8s ease;
             background: #121212;
         }
+
+        .main-container {
+            width: 100%;
+            max-width: 380px;
+        }
+
+        /* ================= PLAYER ================= */
+
         .player {
             background: rgba(24, 24, 24, 0.6);
-            padding: 30px;
+            padding: 25px;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.6);
             text-align: center;
-            width: 320px;
+            width: 100%;
             border: 1px solid rgba(40, 40, 40, 0.5);
             backdrop-filter: blur(10px);
         }
+
         #album-art {
-            width: 280px;
-            height: 280px;
+            width: 100%;
+            max-width: 280px;
+            aspect-ratio: 1 / 1;
             border-radius: 12px;
             object-fit: cover;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             box-shadow: 0 8px 20px rgba(0,0,0,0.5);
         }
-        .track-info h2 { 
-            margin: 10px 0 5px; 
-            font-size: 1.4rem; 
-            font-weight: 600; 
+
+        .track-info h2 {
+            margin: 10px 0 5px;
+            font-size: 1.4rem;
+            font-weight: 600;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        .track-info p { 
-            margin: 0 0 25px; 
-            color: #b3b3b3; 
-            font-size: 0.9rem; 
+
+        .track-info p {
+            margin: 0 0 25px;
+            color: #b3b3b3;
+            font-size: 0.9rem;
         }
-        
-        /* Duration Bar / Seekbar Styling */
+
+        /* ================= PROGRESS ================= */
+
         .progress-container {
             width: 100%;
             margin-bottom: 25px;
         }
+
         .progress-bar {
             width: 100%;
             -webkit-appearance: none;
             appearance: none;
             height: 4px;
             border-radius: 2px;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255,255,255,0.2);
             outline: none;
             cursor: pointer;
         }
+
         .progress-bar::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
@@ -72,6 +97,7 @@
             background: white;
             cursor: pointer;
         }
+
         .time-info {
             display: flex;
             justify-content: space-between;
@@ -80,7 +106,8 @@
             margin-top: 6px;
         }
 
-        /* Spotify Style Controls Layout */
+        /* ================= CONTROLS ================= */
+
         .controls {
             display: flex;
             justify-content: space-between;
@@ -88,6 +115,7 @@
             margin-bottom: 10px;
             padding: 0 15px;
         }
+
         .control-btn {
             background: none;
             border: none;
@@ -99,15 +127,16 @@
             padding: 0;
             transition: transform 0.2s;
         }
+
         .control-btn:active {
             transform: scale(0.9);
         }
+
         .nav-icon {
             font-size: 2.2rem;
         }
-        
-        /* White Circular Play Button */
-        #play-btn { 
+
+        #play-btn {
             background: white;
             color: black;
             width: 65px;
@@ -116,134 +145,337 @@
             font-size: 1.5rem;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
+
+        /* ================= PLAYLIST ================= */
+
+        .playlist-box {
+            margin-top: 18px;
+            background: rgba(18,18,18,0.65);
+            border-radius: 18px;
+            padding: 15px;
+            text-align: left;
+        }
+
+        .playlist-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .playlist-header h3 {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .song-count {
+            color: #aaa;
+            font-size: 0.75rem;
+        }
+
+        .song-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 330px;
+            overflow-y: auto;
+        }
+
+        .song-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .song-item:hover {
+            background: rgba(255,255,255,0.08);
+        }
+
+        .song-item.active {
+            background: rgba(255,255,255,0.13);
+        }
+
+        .song-item img {
+            width: 48px;
+            height: 48px;
+            object-fit: cover;
+            border-radius: 7px;
+            flex-shrink: 0;
+        }
+
+        .song-details {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .song-title {
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .song-artist {
+            color: #aaa;
+            font-size: 0.75rem;
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .delete-btn {
+            border: none;
+            background: transparent;
+            color: #aaa;
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 6px;
+        }
+
+        .delete-btn:hover {
+            color: #ff5c5c;
+        }
+
+        /* ================= MANAGE ================= */
+
+        .manage-btn {
+            width: 100%;
+            margin-top: 12px;
+            padding: 11px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .manage-btn:hover {
+            background: rgba(255,255,255,0.16);
+        }
+
+        .add-panel {
+            display: none;
+            margin-top: 12px;
+            background: rgba(10,10,10,0.7);
+            padding: 15px;
+            border-radius: 14px;
+        }
+
+        .add-panel.show {
+            display: block;
+        }
+
+        .add-panel input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 8px;
+            background: #252525;
+            color: white;
+            outline: none;
+        }
+
+        .add-panel input[type="file"] {
+            font-size: 0.8rem;
+        }
+
+        .add-song-btn {
+            width: 100%;
+            padding: 11px;
+            border: none;
+            border-radius: 9px;
+            background: white;
+            color: black;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .add-song-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .message {
+            text-align: center;
+            color: #aaa;
+            font-size: 0.8rem;
+            margin-top: 10px;
+        }
+
+        .loading {
+            text-align: center;
+            color: #aaa;
+            padding: 15px;
+            font-size: 0.85rem;
+        }
+
+        .empty {
+            text-align: center;
+            color: #888;
+            padding: 20px 5px;
+            font-size: 0.85rem;
+        }
+
+        #audio-player {
+            display: none;
+        }
     </style>
 </head>
+
 <body>
 
-<div class="player">
-    <img id="album-art" src="1.jpg" alt="Album Art">
-    
-    <div class="track-info">
-        <h2 id="title">Loading...</h2>
-        <p id="artist">Loading...</p>
-    </div>
-    
-    <div class="progress-container">
-        <input type="range" id="progress" class="progress-bar" min="0" max="100" value="0" oninput="seekTrack()">
-        <div class="time-info">
-            <span id="current-time">0:00</span>
-            <span id="duration">0:00</span>
+<div class="main-container">
+
+    <!-- ================= PLAYER ================= -->
+
+    <div class="player">
+
+        <img id="album-art" src="" alt="Album Art">
+
+        <div class="track-info">
+            <h2 id="title">Loading...</h2>
+            <p id="artist">Loading...</p>
         </div>
+
+        <div class="progress-container">
+
+            <input
+                type="range"
+                id="progress"
+                class="progress-bar"
+                min="0"
+                max="100"
+                value="0"
+            >
+
+            <div class="time-info">
+                <span id="current-time">0:00</span>
+                <span id="duration">0:00</span>
+            </div>
+
+        </div>
+
+        <div class="controls">
+
+            <button class="control-btn nav-icon" id="prev-btn">
+                ⏮
+            </button>
+
+            <button class="control-btn" id="play-btn">
+                ▶
+            </button>
+
+            <button class="control-btn nav-icon" id="next-btn">
+                ⏭
+            </button>
+
+        </div>
+
+        <audio id="audio-player"></audio>
+
     </div>
 
-    <div class="controls">
-        <button class="control-btn nav-icon" onclick="prevTrack()">⏮</button>
-        <button class="control-btn" id="play-btn" onclick="togglePlay()">▶</button>
-        <button class="control-btn nav-icon" onclick="nextTrack()">⏭</button>
+
+    <!-- ================= PLAYLIST ================= -->
+
+    <div class="playlist-box">
+
+        <div class="playlist-header">
+            <h3>🎵 Playlist</h3>
+            <span class="song-count" id="song-count">0 songs</span>
+        </div>
+
+        <div id="song-list" class="song-list">
+
+            <div class="loading">
+                Loading playlist...
+            </div>
+
+        </div>
+
     </div>
 
-    <audio id="audio-player"></audio>
+
+    <!-- ================= MANAGE ================= -->
+
+    <button class="manage-btn" id="manage-btn">
+        ⚙️ Manage Playlist
+    </button>
+
+
+    <div class="add-panel" id="add-panel">
+
+        <input
+            type="text"
+            id="song-title"
+            placeholder="Song title"
+        >
+
+        <input
+            type="text"
+            id="song-artist"
+            placeholder="Artist"
+        >
+
+        <input
+            type="file"
+            id="audio-file"
+            accept="audio/*"
+        >
+
+        <input
+            type="file"
+            id="image-file"
+            accept="image/*"
+        >
+
+        <button class="add-song-btn" id="add-song-btn">
+            ➕ Add Song
+        </button>
+
+        <div class="message" id="message"></div>
+
+    </div>
+
 </div>
 
+
 <script>
-    // आपकी बताई हुई गानों की पूरी लिस्ट यहाँ सेट कर दी गई है
-    const playlist = [
-        { title: "Namo Namo", artist: "Amit Trivedi", audio: "1.mp3", art: "1.jpg", color: "#613a27" },
-        { title: "Tu Aake Dekhle", artist: "King", audio: "2.mp3", art: "2.jpg", color: "#1c3c5c" },
-        { title: "Hanuman Chalisa", artist: "GowraHari", audio: "3.mp3", art: "3.jpg", color: "#662d14" },
-        { title: "Aaramabh Hai Prachand", artist: "Shrylox", audio: "4.mp3", art: "4.jpg", color: "#4a1212" },
-        { title: "Chal Diye Tum Kahan", artist: "AURO", audio: "5.mp3", art: "5.jpg", color: "#1a403a" },
-        { title: "Saathi", artist: "Atif Aslam", audio: "6.mp3", art: "6.jpg", color: "#2b2240" },
-        { title: "Tera Fitoor", artist: "Arijit Singh", audio: "7.mp3", art: "7.jpg", color: "#471833" },
-        { title: "Tere Sang Yaara", artist: "Atif Aslam", audio: "8.mp3", art: "8.jpg", color: "#19354a" },
-        { title: "Barsaat", artist: "Banjare Duo", audio: "9.mp3", art: "9.jpg", color: "#1c3c5c" },
-    ];
 
-    let currentTrackIndex = 0;
-    let isPlaying = false;
+    // =====================================================
+    // SUPABASE CONNECTION
+    // =====================================================
 
-    const audio = document.getElementById('audio-player');
-    const art = document.getElementById('album-art');
-    const title = document.getElementById('title');
-    const artist = document.getElementById('artist');
-    const playBtn = document.getElementById('play-btn');
-    const progress = document.getElementById('progress');
-    const currentTimeEl = document.getElementById('current-time');
-    const durationEl = document.getElementById('duration');
+    const SUPABASE_URL =
+        "https://hqrufvojjhqsmsasekkd.supabase.co";
 
-    function loadTrack(index) {
-        const track = playlist[index];
-        title.innerText = track.title;
-        artist.innerText = track.artist;
-        art.src = track.art;
-        audio.src = track.audio;
-        
-        // डायनामिक बैकग्राउंड चेंज
-        document.body.style.background = `linear-gradient(to bottom, ${track.color} 0%, #121212 100%)`;
-        
-        resetProgress();
-    }
+    const SUPABASE_KEY =
+        "sb_publishable_zhV1FZbc59h52dQbcN6fMQ_xBGpJ0Ig";
 
-    function togglePlay() {
-        if (isPlaying) {
-            audio.pause();
-            playBtn.innerText = "▶";
-        } else {
-            audio.play().catch(err => console.log("Playback interaction restriction"));
-            playBtn.innerText = "⏸";
-        }
-        isPlaying = !isPlaying;
-    }
+    const { createClient } = supabase;
 
-    function nextTrack() {
-        currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
-        loadTrack(currentTrackIndex);
-        if (isPlaying) audio.play();
-    }
+    const db = createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
 
-    function prevTrack() {
-        currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
-        loadTrack(currentTrackIndex);
-        if (isPlaying) audio.play();
-    }
 
-    function resetProgress() {
-        progress.value = 0;
-        currentTimeEl.innerText = "0:00";
-        durationEl.innerText = "0:00";
-    }
+    // =====================================================
+    // ELEMENTS
+    // =====================================================
 
-    function formatTime(time) {
-        if (isNaN(time)) return "0:00";
-        const mins = Math.floor(time / 60);
-        const secs = Math.floor(time % 60);
-        return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-    }
+    const audio =
+        document.getElementById("audio-player");
 
-    audio.addEventListener('timeupdate', () => {
-        if (audio.duration) {
-            const progressPercent = (audio.currentTime / audio.duration) * 100;
-            progress.value = progressPercent;
-            currentTimeEl.innerText = formatTime(audio.currentTime);
-            durationEl.innerText = formatTime(audio.duration);
-        }
-    });
+    const art =
+        document.getElementById("album-art");
 
-    audio.addEventListener('loadedmetadata', () => {
-        durationEl.innerText = formatTime(audio.duration);
-    });
-
-    audio.addEventListener('ended', nextTrack);
-
-    function seekTrack() {
-        if (audio.duration) {
-            const seekTo = (progress.value / 100) * audio.duration;
-            audio.currentTime = seekTo;
-        }
-    }
-
-    loadTrack(currentTrackIndex);
-</script>
-
-</body>
-</html>
+    const title =
+        document.getElementById("
