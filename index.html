@@ -415,78 +415,80 @@ body {
 <body>
 
 <div class="main-container">
-    
-<!-- TOP SEARCH -->
 
-<div class="search-box top-search">
-
-    <span class="search-icon">🔍</span>
-
-    <input
-        type="text"
-        id="search-input"
-        placeholder="Search songs or artists..."
-    >
-
-    <button
-        id="clear-search"
-        class="clear-search"
-    >
-        ✕
-    </button>
-
-</div>
-
-
-<div class="player">
+    <!-- PLAYER POPUP -->
     <div id="player-modal" class="player-modal">
 
-    <div class="player">
+        <div class="player">
 
-        <button id="close-player" class="close-player">
-            ✕
-        </button>
+            <button id="close-player" class="close-player">
+                ✕
+            </button>
 
-        <img id="album-art" src="" alt="Album Art">
+            <img id="album-art" src="" alt="Album Art">
 
-        <div class="track-info">
-            <h2 id="song-title">Loading...</h2>
-            <p id="song-artist">Please wait</p>
-        </div>
+            <div class="track-info">
+                <h2 id="song-title">Loading...</h2>
+                <p id="song-artist">Please wait</p>
+            </div>
 
-        <div class="progress-container">
+            <div class="progress-container">
 
-            <input
-                type="range"
-                id="progress-bar"
-                class="progress-bar"
-                min="0"
-                max="100"
-                value="0"
-            >
+                <input
+                    type="range"
+                    id="progress-bar"
+                    class="progress-bar"
+                    min="0"
+                    max="100"
+                    value="0"
+                >
 
-            <div class="time-info">
-                <span id="current-time">0:00</span>
-                <span id="duration">0:00</span>
+                <div class="time-info">
+                    <span id="current-time">0:00</span>
+                    <span id="duration">0:00</span>
+                </div>
+
+            </div>
+
+            <div class="controls">
+
+                <button id="prev-btn" class="control-btn">
+                    <span class="nav-icon">⏮</span>
+                </button>
+
+                <button id="play-btn" class="control-btn">
+                    ▶
+                </button>
+
+                <button id="next-btn" class="control-btn">
+                    <span class="nav-icon">⏭</span>
+                </button>
+
             </div>
 
         </div>
 
-        <div class="controls">
+    </div>
+    <!-- PLAYER POPUP ENDS -->
 
-            <button id="prev-btn" class="control-btn">
-                <span class="nav-icon">⏮</span>
-            </button>
 
-            <button id="play-btn" class="control-btn">
-                ▶
-            </button>
+    <!-- SEARCH -->
+    <div class="search-box">
 
-            <button id="next-btn" class="control-btn">
-                <span class="nav-icon">⏭</span>
-            </button>
+        <span class="search-icon">🔍</span>
 
-        </div>
+        <input
+            type="text"
+            id="search-input"
+            placeholder="Search songs or artists..."
+        >
+
+        <button
+            id="clear-search"
+            class="clear-search"
+        >
+            ✕
+        </button>
 
     </div>
 
