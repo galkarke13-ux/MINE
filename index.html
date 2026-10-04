@@ -853,6 +853,16 @@ searchInput.addEventListener(
                 ? "block"
                 : "none";
 
+        // Open playlist when searching
+        if (searchInput.value.trim()) {
+
+            playlistOpen = true;
+
+            playlistContent.classList.add("show");
+
+            playlistArrow.textContent = "▲";
+        }
+
         renderPlaylist();
 
     }
