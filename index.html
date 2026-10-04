@@ -21,7 +21,7 @@ body {
     align-items: flex-start;
     min-height: 100vh;
     margin: 0;
-    padding: 25px 10px;
+    padding: 25px 10px 90px;
     background: #121212;
 }
 
@@ -193,7 +193,10 @@ body {
     position: relative;
     margin-bottom: 12px;
 }
-
+.top-search {
+    margin-bottom: 15px;
+}
+    
 .search-box input {
     width: 100%;
     padding: 11px 38px 11px 38px;
@@ -374,7 +377,30 @@ body {
 <body>
 
 <div class="main-container">
+    
+<!-- TOP SEARCH -->
 
+<div class="search-box top-search">
+
+    <span class="search-icon">🔍</span>
+
+    <input
+        type="text"
+        id="search-input"
+        placeholder="Search songs or artists..."
+    >
+
+    <button
+        id="clear-search"
+        class="clear-search"
+    >
+        ✕
+    </button>
+
+</div>
+
+
+<div class="player">
     <div class="player">
 
         <img id="album-art" src="" alt="Album Art">
@@ -446,24 +472,7 @@ body {
 
         <div id="playlist-content" class="playlist-content">
 
-            <div class="search-box">
-
-                <span class="search-icon">🔍</span>
-
-                <input
-                    type="text"
-                    id="search-input"
-                    placeholder="Search songs or artists..."
-                >
-
-                <button
-                    id="clear-search"
-                    class="clear-search"
-                >
-                    ✕
-                </button>
-
-            </div>
+            
 
 
             <div id="song-list" class="song-list">
