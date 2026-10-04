@@ -23,7 +23,6 @@ body {
     margin: 0;
     padding: 25px 10px;
     background: #121212;
-    transition: background 0.8s ease;
 }
 
 .main-container {
@@ -147,15 +146,15 @@ body {
     margin-top: 18px;
     background: rgba(18,18,18,0.65);
     border-radius: 18px;
-    padding: 15px;
-    text-align: left;
+    overflow: hidden;
 }
 
 .playlist-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 12px;
+    padding: 15px;
+    cursor: pointer;
 }
 
 .playlist-header h3 {
@@ -163,10 +162,74 @@ body {
     font-size: 1rem;
 }
 
+.playlist-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 .song-count {
     color: #aaa;
     font-size: 0.75rem;
 }
+
+.playlist-arrow {
+    font-size: 0.8rem;
+    color: #aaa;
+}
+
+.playlist-content {
+    display: none;
+    padding: 0 15px 15px;
+}
+
+.playlist-content.show {
+    display: block;
+}
+
+/* SEARCH */
+
+.search-box {
+    position: relative;
+    margin-bottom: 12px;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 11px 38px 11px 38px;
+    border: none;
+    border-radius: 10px;
+    background: #252525;
+    color: white;
+    outline: none;
+    font-size: 0.85rem;
+}
+
+.search-box input::placeholder {
+    color: #888;
+}
+
+.search-icon {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+}
+
+.clear-search {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    display: none;
+}
+
+/* SONG LIST */
 
 .song-list {
     display: flex;
@@ -312,110 +375,162 @@ body {
 
 <div class="main-container">
 
-<div class="player">
+    <div class="player">
 
-    <img id="album-art" src="" alt="Album Art">
+        <img id="album-art" src="" alt="Album Art">
 
-    <div class="track-info">
-        <h2 id="title">No songs</h2>
-        <p id="artist">Add a song to begin</p>
-    </div>
+        <div class="track-info">
+            <h2 id="song-title">Loading...</h2>
+            <p id="song-artist">Please wait</p>
+        </div>
 
-    <div class="progress-container">
+        <div class="progress-container">
 
-        <input
-            type="range"
-            id="progress"
-            class="progress-bar"
-            min="0"
-            max="100"
-            value="0"
-        >
+            <input
+                type="range"
+                id="progress-bar"
+                class="progress-bar"
+                min="0"
+                max="100"
+                value="0"
+            >
 
-        <div class="time-info">
-            <span id="current-time">0:00</span>
-            <span id="duration">0:00</span>
+            <div class="time-info">
+                <span id="current-time">0:00</span>
+                <span id="duration">0:00</span>
+            </div>
+
+        </div>
+
+        <div class="controls">
+
+            <button id="prev-btn" class="control-btn">
+                <span class="nav-icon">⏮</span>
+            </button>
+
+            <button id="play-btn" class="control-btn">
+                ▶
+            </button>
+
+            <button id="next-btn" class="control-btn">
+                <span class="nav-icon">⏭</span>
+            </button>
+
         </div>
 
     </div>
 
-    <div class="controls">
 
-        <button class="control-btn nav-icon" id="prev-btn">⏮</button>
+    <!-- PLAYLIST -->
 
-        <button class="control-btn" id="play-btn">▶</button>
+    <div class="playlist-box">
 
-        <button class="control-btn nav-icon" id="next-btn">⏭</button>
+        <div class="playlist-header" id="playlist-header">
+
+            <h3>🎵 Playlist</h3>
+
+            <div class="playlist-right">
+
+                <span id="song-count" class="song-count">
+                    0 songs
+                </span>
+
+                <span id="playlist-arrow" class="playlist-arrow">
+                    ▼
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div id="playlist-content" class="playlist-content">
+
+            <div class="search-box">
+
+                <span class="search-icon">🔍</span>
+
+                <input
+                    type="text"
+                    id="search-input"
+                    placeholder="Search songs or artists..."
+                >
+
+                <button
+                    id="clear-search"
+                    class="clear-search"
+                >
+                    ✕
+                </button>
+
+            </div>
+
+
+            <div id="song-list" class="song-list">
+
+                <div class="loading">
+                    Loading playlist...
+                </div>
+
+            </div>
+
+        </div>
 
     </div>
 
-    <audio id="audio-player"></audio>
 
-</div>
+    <!-- MANAGE PLAYLIST -->
 
-
-<div class="playlist-box">
-
-    <div class="playlist-header">
-        <h3>🎵 Playlist</h3>
-        <span class="song-count" id="song-count">0 songs</span>
-    </div>
-
-    <div id="song-list" class="song-list">
-        <div class="loading">Loading playlist...</div>
-    </div>
-
-</div>
-
-
-<button class="manage-btn" id="manage-btn">
-    ⚙️ Manage Playlist
-</button>
-
-
-<div class="add-panel" id="add-panel">
-
-    <input
-        type="text"
-        id="song-title"
-        placeholder="Song title"
-    >
-
-    <input
-        type="text"
-        id="song-artist"
-        placeholder="Artist"
-    >
-
-    <input
-        type="file"
-        id="audio-file"
-        accept="audio/*"
-    >
-
-    <input
-        type="file"
-        id="image-file"
-        accept="image/*"
-    >
-
-    <button class="add-song-btn" id="add-song-btn">
-        ➕ Add Song
+    <button id="manage-btn" class="manage-btn">
+        ⚙️ Manage Playlist
     </button>
 
-    <div class="message" id="message"></div>
+
+    <div id="add-panel" class="add-panel">
+
+        <input
+            type="text"
+            id="title-input"
+            placeholder="Song title"
+        >
+
+        <input
+            type="text"
+            id="artist-input"
+            placeholder="Artist"
+        >
+
+        <input
+            type="file"
+            id="audio-input"
+            accept="audio/*"
+        >
+
+        <input
+            type="file"
+            id="art-input"
+            accept="image/*"
+        >
+
+        <button
+            id="add-song-btn"
+            class="add-song-btn"
+        >
+            ➕ Add Song
+        </button>
+
+    </div>
+
+
+    <div id="message" class="message"></div>
 
 </div>
 
-</div>
+
+<audio id="audio-player"></audio>
 
 
 <script>
-
-/* =====================================================
-   SUPABASE
-===================================================== */
-
 const SUPABASE_URL =
     "https://hqrufvojjhqsmsasekkd.supabase.co";
 
@@ -430,63 +545,113 @@ const db = createClient(
 );
 
 
-/* =====================================================
-   ELEMENTS
-===================================================== */
+// ELEMENTS
 
 const audio = document.getElementById("audio-player");
 
-const art = document.getElementById("album-art");
+const albumArt =
+    document.getElementById("album-art");
 
-const title = document.getElementById("title");
+const title =
+    document.getElementById("song-title");
 
-const artist = document.getElementById("artist");
+const artist =
+    document.getElementById("song-artist");
 
-const progress = document.getElementById("progress");
+const playBtn =
+    document.getElementById("play-btn");
 
-const currentTime = document.getElementById("current-time");
+const prevBtn =
+    document.getElementById("prev-btn");
 
-const duration = document.getElementById("duration");
+const nextBtn =
+    document.getElementById("next-btn");
 
-const playBtn = document.getElementById("play-btn");
+const progressBar =
+    document.getElementById("progress-bar");
 
-const prevBtn = document.getElementById("prev-btn");
+const currentTime =
+    document.getElementById("current-time");
 
-const nextBtn = document.getElementById("next-btn");
+const duration =
+    document.getElementById("duration");
 
-const songList = document.getElementById("song-list");
+const playlistHeader =
+    document.getElementById("playlist-header");
 
-const songCount = document.getElementById("song-count");
+const playlistContent =
+    document.getElementById("playlist-content");
 
-const manageBtn = document.getElementById("manage-btn");
+const playlistArrow =
+    document.getElementById("playlist-arrow");
 
-const addPanel = document.getElementById("add-panel");
+const songCount =
+    document.getElementById("song-count");
 
-const addSongBtn = document.getElementById("add-song-btn");
+const songList =
+    document.getElementById("song-list");
 
-const message = document.getElementById("message");
+const searchInput =
+    document.getElementById("search-input");
 
-const songTitle = document.getElementById("song-title");
+const clearSearch =
+    document.getElementById("clear-search");
 
-const songArtist = document.getElementById("song-artist");
+const manageBtn =
+    document.getElementById("manage-btn");
 
-const audioFile = document.getElementById("audio-file");
+const addPanel =
+    document.getElementById("add-panel");
 
-const imageFile = document.getElementById("image-file");
+const titleInput =
+    document.getElementById("title-input");
+
+const artistInput =
+    document.getElementById("artist-input");
+
+const audioInput =
+    document.getElementById("audio-input");
+
+const artInput =
+    document.getElementById("art-input");
+
+const addSongBtn =
+    document.getElementById("add-song-btn");
+
+const message =
+    document.getElementById("message");
 
 
-/* =====================================================
-   VARIABLES
-===================================================== */
+let songs = [];
 
-let playlist = [];
+let currentIndex = 0;
 
-let currentIndex = -1;
+let playlistOpen = false;
+
+let filteredSongs = [];
 
 
-/* =====================================================
-   MANAGE BUTTON
-===================================================== */
+// -----------------------------
+// PLAYLIST OPEN / CLOSE
+// -----------------------------
+
+playlistHeader.addEventListener("click", () => {
+
+    playlistOpen = !playlistOpen;
+
+    playlistContent.classList.toggle(
+        "show",
+        playlistOpen
+    );
+
+    playlistArrow.textContent =
+        playlistOpen ? "▲" : "▼";
+});
+
+
+// -----------------------------
+// MANAGE PLAYLIST
+// -----------------------------
 
 manageBtn.addEventListener("click", () => {
 
@@ -495,82 +660,126 @@ manageBtn.addEventListener("click", () => {
 });
 
 
-/* =====================================================
-   LOAD PLAYLIST
-===================================================== */
+// -----------------------------
+// LOAD PLAYLIST
+// -----------------------------
 
 async function loadPlaylist() {
 
     songList.innerHTML =
-        '<div class="loading">Loading playlist...</div>';
+        `<div class="loading">Loading playlist...</div>`;
 
-    const { data, error } = await db
-        .from("songs")
-        .select("*")
-        .order("created_at", { ascending: true });
+    const { data, error } =
+        await db
+            .from("songs")
+            .select("*")
+            .order("created_at", {
+                ascending: true
+            });
 
     if (error) {
 
         console.error(error);
 
         songList.innerHTML =
-            '<div class="empty">Could not load playlist.</div>';
-
-        songCount.textContent = "Error";
+            `<div class="empty">
+                Unable to load playlist
+            </div>`;
 
         return;
     }
 
-    playlist = data || [];
+    songs = data || [];
 
     songCount.textContent =
-        `${playlist.length} song${playlist.length === 1 ? "" : "s"}`;
+        `${songs.length} song${songs.length === 1 ? "" : "s"}`;
 
     renderPlaylist();
 
-    if (playlist.length > 0) {
+    if (songs.length > 0) {
 
-        loadTrack(0, false);
+        if (currentIndex >= songs.length) {
+            currentIndex = 0;
+        }
+
+        loadTrack(currentIndex, false);
 
     } else {
 
-        title.textContent = "No songs";
-
-        artist.textContent = "Add a song to begin";
+        title.textContent = "No Songs";
+        artist.textContent = "Add a song to your playlist";
+        albumArt.src = "";
 
     }
 }
 
 
-/* =====================================================
-   RENDER PLAYLIST
-===================================================== */
+// -----------------------------
+// RENDER PLAYLIST + SEARCH
+// -----------------------------
 
 function renderPlaylist() {
 
-    songList.innerHTML = "";
+    const searchText =
+        searchInput.value
+            .trim()
+            .toLowerCase();
 
-    if (playlist.length === 0) {
+    filteredSongs = songs.filter(song => {
+
+        const songTitle =
+            (song.title || "").toLowerCase();
+
+        const songArtist =
+            (song.artist || "").toLowerCase();
+
+        return (
+            songTitle.includes(searchText) ||
+            songArtist.includes(searchText)
+        );
+
+    });
+
+
+    if (filteredSongs.length === 0) {
 
         songList.innerHTML =
-            '<div class="empty">No songs yet.<br>Add your first song below.</div>';
+            `<div class="empty">
+                No songs found
+            </div>`;
 
         return;
     }
 
-    playlist.forEach((song, index) => {
 
-        const item = document.createElement("div");
+    songList.innerHTML = "";
+
+
+    filteredSongs.forEach(song => {
+
+        const originalIndex =
+            songs.findIndex(
+                item => item.id === song.id
+            );
+
+
+        const item =
+            document.createElement("div");
 
         item.className = "song-item";
 
-        if (index === currentIndex) {
+
+        if (originalIndex === currentIndex) {
             item.classList.add("active");
         }
 
+
         item.innerHTML = `
 
-            <img src="${escapeHtml(song.art_url)}" alt="">
+            <img
+                src="${escapeHtml(song.art_url)}"
+                alt="Album"
+            >
 
             <div class="song-details">
 
@@ -584,7 +793,10 @@ function renderPlaylist() {
 
             </div>
 
-            <button class="delete-btn" title="Delete">
+            <button
+                class="delete-btn"
+                title="Delete Song"
+            >
                 🗑️
             </button>
         `;
@@ -592,21 +804,25 @@ function renderPlaylist() {
 
         item.addEventListener("click", () => {
 
-            loadTrack(index, true);
+            loadTrack(originalIndex, true);
 
         });
 
 
-        const deleteButton =
+        const deleteBtn =
             item.querySelector(".delete-btn");
 
-        deleteButton.addEventListener("click", (event) => {
 
-            event.stopPropagation();
+        deleteBtn.addEventListener(
+            "click",
+            (event) => {
 
-            deleteSong(song);
+                event.stopPropagation();
 
-        });
+                deleteSong(song);
+
+            }
+        );
 
 
         songList.appendChild(item);
@@ -615,42 +831,95 @@ function renderPlaylist() {
 }
 
 
-/* =====================================================
-   LOAD TRACK
-===================================================== */
+// -----------------------------
+// SEARCH
+// -----------------------------
 
-function loadTrack(index, autoplay = false) {
+searchInput.addEventListener(
+    "input",
+    () => {
 
-    if (!playlist.length) return;
+        clearSearch.style.display =
+            searchInput.value
+                ? "block"
+                : "none";
+
+        renderPlaylist();
+
+    }
+);
+
+
+clearSearch.addEventListener(
+    "click",
+    () => {
+
+        searchInput.value = "";
+
+        clearSearch.style.display =
+            "none";
+
+        renderPlaylist();
+
+        searchInput.focus();
+
+    }
+);
+
+
+// -----------------------------
+// LOAD TRACK
+// -----------------------------
+
+function loadTrack(index, shouldPlay = false) {
+
+    if (!songs.length) return;
+
 
     currentIndex = index;
 
-    const song = playlist[currentIndex];
+    const song = songs[currentIndex];
 
-    audio.src = song.audio_url;
 
-    art.src = song.art_url;
+    title.textContent =
+        song.title;
 
-    title.textContent = song.title;
+    artist.textContent =
+        song.artist;
 
-    artist.textContent = song.artist;
+    albumArt.src =
+        song.art_url;
 
-    progress.value = 0;
+    audio.src =
+        song.audio_url;
 
-    currentTime.textContent = "0:00";
+    progressBar.value = 0;
 
-    duration.textContent = "0:00";
+    currentTime.textContent =
+        "0:00";
+
+    duration.textContent =
+        "0:00";
+
 
     renderPlaylist();
 
-    if (autoplay) {
+
+    if (shouldPlay) {
 
         audio.play()
             .then(() => {
-                playBtn.textContent = "⏸";
+
+                playBtn.textContent = "❚❚";
+
             })
             .catch(error => {
-                console.error(error);
+
+                console.error(
+                    "Playback error:",
+                    error
+                );
+
             });
 
     } else {
@@ -661,166 +930,205 @@ function loadTrack(index, autoplay = false) {
 }
 
 
-/* =====================================================
-   PLAY / PAUSE
-===================================================== */
+// -----------------------------
+// PLAY / PAUSE
+// -----------------------------
 
-playBtn.addEventListener("click", () => {
+playBtn.addEventListener(
+    "click",
+    () => {
 
-    if (!playlist.length) return;
+        if (!songs.length) return;
 
-    if (audio.paused) {
 
-        audio.play();
+        if (audio.paused) {
 
-        playBtn.textContent = "⏸";
+            audio.play();
 
-    } else {
+            playBtn.textContent = "❚❚";
 
-        audio.pause();
+        } else {
 
-        playBtn.textContent = "▶";
+            audio.pause();
+
+            playBtn.textContent = "▶";
+
+        }
 
     }
+);
 
-});
+
+// -----------------------------
+// NEXT
+// -----------------------------
+
+nextBtn.addEventListener(
+    "click",
+    () => {
+
+        if (!songs.length) return;
 
 
-/* =====================================================
-   NEXT
-===================================================== */
+        currentIndex =
+            (currentIndex + 1)
+            % songs.length;
 
-nextBtn.addEventListener("click", () => {
 
-    if (!playlist.length) return;
+        loadTrack(
+            currentIndex,
+            true
+        );
 
-    let nextIndex =
-        currentIndex + 1;
-
-    if (nextIndex >= playlist.length) {
-        nextIndex = 0;
     }
-
-    loadTrack(nextIndex, true);
-
-});
+);
 
 
-/* =====================================================
-   PREVIOUS
-===================================================== */
+// -----------------------------
+// PREVIOUS
+// -----------------------------
 
-prevBtn.addEventListener("click", () => {
+prevBtn.addEventListener(
+    "click",
+    () => {
 
-    if (!playlist.length) return;
+        if (!songs.length) return;
 
-    let previousIndex =
-        currentIndex - 1;
 
-    if (previousIndex < 0) {
-        previousIndex = playlist.length - 1;
+        currentIndex =
+            (currentIndex - 1 + songs.length)
+            % songs.length;
+
+
+        loadTrack(
+            currentIndex,
+            true
+        );
+
     }
-
-    loadTrack(previousIndex, true);
-
-});
+);
 
 
-/* =====================================================
-   AUDIO EVENTS
-===================================================== */
+// -----------------------------
+// SONG ENDED
+// -----------------------------
 
-audio.addEventListener("loadedmetadata", () => {
+audio.addEventListener(
+    "ended",
+    () => {
 
-    duration.textContent =
-        formatTime(audio.duration);
-
-});
-
-
-audio.addEventListener("timeupdate", () => {
-
-    if (!audio.duration) return;
-
-    progress.value =
-        (audio.currentTime / audio.duration) * 100;
-
-    currentTime.textContent =
-        formatTime(audio.currentTime);
-
-});
+        if (!songs.length) return;
 
 
-audio.addEventListener("play", () => {
-
-    playBtn.textContent = "⏸";
-
-});
+        currentIndex =
+            (currentIndex + 1)
+            % songs.length;
 
 
-audio.addEventListener("pause", () => {
+        loadTrack(
+            currentIndex,
+            true
+        );
 
-    playBtn.textContent = "▶";
-
-});
-
-
-audio.addEventListener("ended", () => {
-
-    if (!playlist.length) return;
-
-    let nextIndex =
-        currentIndex + 1;
-
-    if (nextIndex >= playlist.length) {
-        nextIndex = 0;
     }
-
-    loadTrack(nextIndex, true);
-
-});
+);
 
 
-/* =====================================================
-   SEEK
-===================================================== */
+// -----------------------------
+// TIME UPDATE
+// -----------------------------
 
-progress.addEventListener("input", () => {
+audio.addEventListener(
+    "timeupdate",
+    () => {
 
-    if (!audio.duration) return;
-
-    audio.currentTime =
-        (progress.value / 100) * audio.duration;
-
-});
+        if (!audio.duration) return;
 
 
-/* =====================================================
-   ADD SONG
-===================================================== */
+        const percent =
+            (audio.currentTime /
+             audio.duration) * 100;
 
-addSongBtn.addEventListener("click", addSong);
+
+        progressBar.value =
+            percent;
+
+
+        currentTime.textContent =
+            formatTime(
+                audio.currentTime
+            );
+
+    }
+);
+
+
+// -----------------------------
+// DURATION
+// -----------------------------
+
+audio.addEventListener(
+    "loadedmetadata",
+    () => {
+
+        duration.textContent =
+            formatTime(
+                audio.duration
+            );
+
+    }
+);
+
+
+// -----------------------------
+// SEEK
+// -----------------------------
+
+progressBar.addEventListener(
+    "input",
+    () => {
+
+        if (!audio.duration) return;
+
+
+        audio.currentTime =
+            (progressBar.value / 100)
+            * audio.duration;
+
+    }
+);
+
+
+// -----------------------------
+// ADD SONG
+// -----------------------------
+
+addSongBtn.addEventListener(
+    "click",
+    addSong
+);
+
 
 async function addSong() {
 
-    const titleValue =
-        songTitle.value.trim();
+    const songTitle =
+        titleInput.value.trim();
 
-    const artistValue =
-        songArtist.value.trim();
+    const songArtist =
+        artistInput.value.trim();
 
-    const audioValue =
-        audioFile.files[0];
+    const audioFile =
+        audioInput.files[0];
 
-    const imageValue =
-        imageFile.files[0];
+    const artFile =
+        artInput.files[0];
 
 
     if (
-        !titleValue ||
-        !artistValue ||
-        !audioValue ||
-        !imageValue
+        !songTitle ||
+        !songArtist ||
+        !audioFile ||
+        !artFile
     ) {
 
         showMessage(
@@ -833,63 +1141,65 @@ async function addSong() {
 
     addSongBtn.disabled = true;
 
-    showMessage("Uploading song...");
+    addSongBtn.textContent =
+        "Uploading...";
 
 
     try {
 
         const uniqueId =
-            Date.now() + "_" +
-            Math.random().toString(36).substring(2, 8);
+            Date.now() +
+            "_" +
+            Math.random()
+                .toString(36)
+                .substring(2);
 
-
-        /* AUDIO */
-
-        const audioExtension =
-            getExtension(audioValue.name);
 
         const audioPath =
-            uniqueId + "." + audioExtension;
+            uniqueId +
+            "_" +
+            audioFile.name;
 
 
-        const { error: audioError } =
+        const artPath =
+            uniqueId +
+            "_" +
+            artFile.name;
+
+
+        // UPLOAD AUDIO
+
+        const audioUpload =
             await db.storage
                 .from("music")
                 .upload(
                     audioPath,
-                    audioValue
+                    audioFile
                 );
 
 
-        if (audioError) {
-            throw audioError;
+        if (audioUpload.error) {
+            throw audioUpload.error;
         }
 
 
-        /* IMAGE */
+        // UPLOAD ALBUM ART
 
-        const imageExtension =
-            getExtension(imageValue.name);
-
-        const imagePath =
-            uniqueId + "." + imageExtension;
-
-
-        const { error: imageError } =
+        const artUpload =
             await db.storage
                 .from("album-art")
                 .upload(
-                    imagePath,
-                    imageValue
+                    artPath,
+                    artFile
                 );
 
 
-        if (imageError) {
-            throw imageError;
+        if (artUpload.error) {
+            throw artUpload.error;
         }
 
 
-        /* PUBLIC URLS */
+        // GET AUDIO URL
 
         const audioUrl =
             db.storage
@@ -898,46 +1208,50 @@ async function addSong() {
                 .data.publicUrl;
 
 
-        const imageUrl =
+        // GET ART URL
+
+        const artUrl =
             db.storage
                 .from("album-art")
-                .getPublicUrl(imagePath)
+                .getPublicUrl(artPath)
                 .data.publicUrl;
 
 
-        /* DATABASE */
+        // SAVE SONG INFORMATION
 
-        const { error: insertError } =
+        const { error } =
             await db
                 .from("songs")
                 .insert({
 
-                    title: titleValue,
+                    title: songTitle,
 
-                    artist: artistValue,
+                    artist: songArtist,
 
                     audio_url: audioUrl,
 
-                    art_url: imageUrl
+                    art_url: artUrl
 
                 });
 
 
-        if (insertError) {
-            throw insertError;
+        if (error) {
+            throw error;
         }
 
 
-        showMessage("Song added successfully!");
+        showMessage(
+            "Song added successfully! 🎵"
+        );
 
 
-        songTitle.value = "";
+        titleInput.value = "";
 
-        songArtist.value = "";
+        artistInput.value = "";
 
-        audioFile.value = "";
+        audioInput.value = "";
 
-        imageFile.value = "";
+        artInput.value = "";
 
 
         await loadPlaylist();
@@ -948,7 +1262,7 @@ async function addSong() {
         console.error(error);
 
         showMessage(
-            "Error: " + error.message
+            "Something went wrong while adding the song."
         );
 
     }
@@ -956,12 +1270,14 @@ async function addSong() {
 
     addSongBtn.disabled = false;
 
+    addSongBtn.textContent =
+        "➕ Add Song";
 }
 
 
-/* =====================================================
-   DELETE SONG
-===================================================== */
+// -----------------------------
+// DELETE SONG
+// -----------------------------
 
 async function deleteSong(song) {
 
@@ -970,13 +1286,11 @@ async function deleteSong(song) {
             `Delete "${song.title}"?`
         );
 
+
     if (!confirmed) return;
 
 
     try {
-
-        showMessage("Deleting song...");
-
 
         const audioPath =
             getStoragePath(
@@ -984,36 +1298,50 @@ async function deleteSong(song) {
                 "music"
             );
 
-        const imagePath =
+
+        const artPath =
             getStoragePath(
                 song.art_url,
                 "album-art"
             );
 
 
+        // DELETE AUDIO FILE
+
         if (audioPath) {
 
             await db.storage
                 .from("music")
-                .remove([audioPath]);
+                .remove([
+                    audioPath
+                ]);
 
         }
 
 
-        if (imagePath) {
+        // DELETE ALBUM ART
+
+        if (artPath) {
 
             await db.storage
                 .from("album-art")
-                .remove([imagePath]);
+                .remove([
+                    artPath
+                ]);
 
         }
 
+
+        // DELETE DATABASE ROW
 
         const { error } =
             await db
                 .from("songs")
                 .delete()
-                .eq("id", song.id);
+                .eq(
+                    "id",
+                    song.id
+                );
 
 
         if (error) {
@@ -1021,28 +1349,12 @@ async function deleteSong(song) {
         }
 
 
-        if (
-            playlist[currentIndex] &&
-            playlist[currentIndex].id === song.id
-        ) {
-
-            audio.pause();
-
-            currentIndex = -1;
-
-            title.textContent = "No songs";
-
-            artist.textContent =
-                "Add a song to begin";
-
-            art.src = "";
-
-        }
+        showMessage(
+            "Song deleted."
+        );
 
 
         await loadPlaylist();
-
-        showMessage("Song deleted.");
 
 
     } catch (error) {
@@ -1050,41 +1362,37 @@ async function deleteSong(song) {
         console.error(error);
 
         showMessage(
-            "Delete error: " + error.message
+            "Could not delete song."
         );
 
     }
-
 }
 
 
-/* =====================================================
-   HELPERS
-===================================================== */
+// -----------------------------
+// STORAGE PATH
+// -----------------------------
 
-function getExtension(filename) {
-
-    const parts =
-        filename.split(".");
-
-    return parts.length > 1
-        ? parts.pop().toLowerCase()
-        : "file";
-
-}
-
-
-function getStoragePath(url, bucket) {
+function getStoragePath(
+    url,
+    bucket
+) {
 
     if (!url) return null;
+
 
     const marker =
         `/storage/v1/object/public/${bucket}/`;
 
+
     const index =
         url.indexOf(marker);
 
-    if (index === -1) return null;
+
+    if (index === -1) {
+        return null;
+    }
+
 
     return decodeURIComponent(
         url.substring(
@@ -1095,50 +1403,99 @@ function getStoragePath(url, bucket) {
 }
 
 
+// -----------------------------
+// FORMAT TIME
+// -----------------------------
+
 function formatTime(seconds) {
 
-    if (!isFinite(seconds)) {
+    if (
+        !seconds ||
+        isNaN(seconds)
+    ) {
         return "0:00";
     }
 
+
     const minutes =
-        Math.floor(seconds / 60);
+        Math.floor(
+            seconds / 60
+        );
+
 
     const secs =
-        Math.floor(seconds % 60)
-            .toString()
-            .padStart(2, "0");
+        Math.floor(
+            seconds % 60
+        );
 
-    return `${minutes}:${secs}`;
+
+    return (
+        minutes +
+        ":" +
+        secs
+            .toString()
+            .padStart(2, "0")
+    );
 
 }
 
+
+// -----------------------------
+// MESSAGE
+// -----------------------------
 
 function showMessage(text) {
 
-    message.textContent = text;
+    message.textContent =
+        text;
+
+
+    setTimeout(
+        () => {
+
+            message.textContent = "";
+
+        },
+        3000
+    );
 
 }
 
 
-function escapeHtml(value) {
+// -----------------------------
+// ESCAPE HTML
+// -----------------------------
 
-    return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+function escapeHtml(text) {
+
+    return String(text)
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 
 }
 
 
-/*
-========================================================================
-=============
-    START
-========================================================================
-============= */
+// -----------------------------
+// START
+// -----------------------------
 
 loadPlaylist();
 
